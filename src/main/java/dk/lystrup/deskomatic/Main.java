@@ -5,12 +5,16 @@
  */
 package dk.lystrup.deskomatic;
 
+import java.io.File;
+
 /**
  *
  * @author Gof
  */
 public class Main {
     public static void main(String[] args) {
-        Widget w = new Widget("http://www.newz.dk", 512, 512);
+        File sysInfoFile = new File("C:\\Users\\Gof\\Documents\\DeskOMatic\\SysInfo\\index.html");
+        
+        Widget w = new Widget(sysInfoFile.toURI().toString(), 512, 512);
     }
 }
