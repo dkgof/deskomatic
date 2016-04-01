@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
  *
  * @author Gof
  */
-public class Widget {
+public class WidgetJX {
 
     private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
@@ -40,7 +40,7 @@ public class Widget {
 
     private Point dragStart;
 
-    public Widget(String url, int width, int height) {
+    public WidgetJX(String url, int width, int height) {
         this.widgetUrl = url;
         this.width = width;
         this.height = height;
@@ -72,36 +72,6 @@ public class Widget {
     }
 
     private void createBrowser() {
-        Platform.runLater(() -> {
-            //Create a new WebView
-            browser = new WebView();
-
-            //Add it to our JFXPanel
-            jfxPanel.setScene(new Scene(browser, javafx.scene.paint.Color.TRANSPARENT));
-
-            //Setup listeners for events
-            browser.getEngine().documentProperty().addListener((ObservableValue<? extends Document> ov, Document oldDocument, Document newDocument) -> {
-                System.out.println("Document loaded...");
-            });
-            
-            browser.getEngine().getLoadWorker().stateProperty().addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
-                if(newState == State.SUCCEEDED) {
-                    System.out.println("Load page complete...");
-                }
-            });
-
-            browser.getEngine().setCreatePopupHandler((PopupFeatures config) -> {
-                System.out.println("Popup requested: "+config.toString());
-                return null;
-            });
-
-            browser.getEngine().load(widgetUrl);
-            
-            //Make background page transparent
-            Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
-
-            System.out.println("Browser module added...");
-        });
     }
 
     private void setupDragging() {
