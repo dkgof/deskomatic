@@ -5,6 +5,7 @@
  */
 package dk.lystrup.deskomatic;
 
+import dk.lystrup.deskomatic.cookies.Cookies;
 import java.io.File;
 
 /**
@@ -13,8 +14,16 @@ import java.io.File;
  */
 public class Main {
     public static void main(String[] args) {
-        File sysInfoFile = new File("C:\\Users\\Gof\\Documents\\DeskOMatic\\SysInfo\\index.html");
+        //Setup persistent cookie storing
+        Cookies cookies = new Cookies("./cookies.json");
         
-        Widget w = new Widget(sysInfoFile.toURI().toString(), 512, 512);
+        //Calendar view widget
+        String calendarView = new File("C:\\Users\\Gof\\Documents\\DeskOMatic\\SysInfo\\index.html").toURI().toString();
+        
+        //Google login page
+        String googleLogin = "https://accounts.google.com";
+        
+        Widget w = new Widget(calendarView, 512, 512);
+        //Widget w2 = new Widget(calendarView, 512, 512);
     }
 }
