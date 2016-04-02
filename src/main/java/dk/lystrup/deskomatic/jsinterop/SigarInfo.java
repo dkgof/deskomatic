@@ -16,6 +16,9 @@ import kamon.sigar.SigarProvisioner;
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
+import org.hyperic.sigar.NetInterfaceConfig;
+import org.hyperic.sigar.NetInterfaceStat;
+import org.hyperic.sigar.NetStat;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 
@@ -69,7 +72,7 @@ public class SigarInfo {
         return json.toString();
     }
 
-    private long lastTimestamp = -1;
+    private long lastDiskTimestamp = -1;
     private Map<String, Long> lastReadBytesMap = new HashMap<>();
     private Map<String, Long> lastWriteBytesMap = new HashMap<>();
 
@@ -92,12 +95,12 @@ public class SigarInfo {
                 long writeBytes = fsInfo.getDiskWriteBytes();
                 long readBytes = fsInfo.getDiskReadBytes();
 
-                if (lastTimestamp != -1) {
+                if (lastDiskTimestamp != -1) {
 
                     long lastReadBytes = lastReadBytesMap.get(fs.getDirName());
                     long lastWriteBytes = lastWriteBytesMap.get(fs.getDirName());
 
-                    double time = (System.currentTimeMillis() - lastTimestamp) / 1000.0;
+                    double time = (System.currentTimeMillis() - lastDiskTimestamp) / 1000.0;
                     double writeSpeed = (writeBytes - lastWriteBytes) / time;
                     double readSpeed = (readBytes - lastReadBytes) / time;
 
@@ -114,13 +117,51 @@ public class SigarInfo {
             Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        lastTimestamp = System.currentTimeMillis();
+        lastDiskTimestamp = System.currentTimeMillis();
 
         return json.toString();
     }
 
+    private long lastNetTimestamp = -1;
+    private long lastRx = -1;
+    private long lastTx = -1;
+
     public String getNetworkInfo() {
         JsonObject json = new JsonObject();
+
+        try {
+            NetInterfaceConfig netIface = sigar.getNetInterfaceConfig(null);
+            
+            String desc = netIface.getDescription();
+            
+            json.add("description", JSBridge.getJsonWithUnits("", null, desc, -1));
+            json.add("hwaddr", JSBridge.getJsonWithUnits(netIface.getHwaddr(), null, "Mac", -1));
+            json.add("ip", JSBridge.getJsonWithUnits(netIface.getAddress(), null, "Ip", -1));
+            json.add("netmask", JSBridge.getJsonWithUnits(netIface.getNetmask(), null, "Netmask", -1));
+
+            NetInterfaceStat stats = sigar.getNetInterfaceStat(netIface.getName());
+
+            long rx = stats.getRxBytes();
+            long tx = stats.getTxBytes();
+
+            if (lastNetTimestamp != -1) {
+                double time = (System.currentTimeMillis() - lastNetTimestamp) / 1000.0;
+
+                double rxSpeed = (rx - lastRx) / time / 1024.0 / 1024.0;
+                double txSpeed = (tx - lastTx) / time / 1024.0 / 1024.0;
+
+                json.add("rxSpeed", JSBridge.getJsonWithUnits(rxSpeed, "MB/s", "Incomming", 2));
+                json.add("txSpeed", JSBridge.getJsonWithUnits(txSpeed, "MB/s", "Outgoing", 2));
+            }
+
+            lastRx = rx;
+            lastTx = tx;
+
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        lastNetTimestamp = System.currentTimeMillis();
 
         return json.toString();
     }

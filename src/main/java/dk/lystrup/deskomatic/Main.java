@@ -27,5 +27,8 @@ public class Main {
 
         String sigarDisk = new File("./widgets/SigarDisk/index.html").toURI().toString();
         Widget sigarDiskWidget = new Widget(sigarDisk, 220, 550);
+
+        String sigarNet = new File("./widgets/SigarNet/index.html").toURI().toString();
+        Widget sigarNetWidget = new Widget(sigarNet, 440, 300);
     }
 }
