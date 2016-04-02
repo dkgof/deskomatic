@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html debug="false">
+    <head>
+        <link href="./main.css" rel="stylesheet" type="text/css"/>
+		
+		<!-- <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script> -->
+		
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+    </head>
+	
+    <body class="noselect">
+		<div class="container">
+			<div class="title">Sigar Disk</div>
+			<div class="disks"></div>
+		</div>
+		
+		<script>
+			function jsBridgeReady() {
+				window.setInterval(function() {
+					update();
+				}, 1000);
+			}
+			
+			function update() {
+				var sigar = deskomatic.getSigar();
+				
+				var diskJson = JSON.parse(sigar.getDiskInfo());
+				
+				jQuery(".disks").empty();
+				
+				jQuery.each(diskJson, function(key, fsJson) {
+					var info = jQuery("<div class=\"info\"></div>");
+
+					info.append("<div class=\"\">"+key+"</div>");
+					
+					jQuery.each(fsJson, function(key2, entry) {
+						var row = jQuery("<div class=\"row\"></div>");
+						row.append(jQuery("<div class=\"label\">"+key2+"</div>"));
+						row.append(jQuery("<div class=\"value\">"+entry+"</div>"));
+						
+						info.append(row);
+					});
+					
+					jQuery(".disks").append(info);
+				});
+			}
+			
+			function shorten(number) {
+				return number.toFixed(2);;
+			}
+		</script>
+	</body>
+</html>

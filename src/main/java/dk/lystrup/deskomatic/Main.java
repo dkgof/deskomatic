@@ -1,6 +1,6 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template fdiskdsdssdsdile, choose Tools | Templates
  * and open the template in the editor.
  */
 package dk.lystrup.deskomatic;
@@ -24,5 +24,8 @@ public class Main {
 
         String sigarCpu = new File("./widgets/SigarCpu/index.html").toURI().toString();
         Widget sigarCpuWidget = new Widget(sigarCpu, 220, 300);
+
+        String sigarDisk = new File("./widgets/SigarDisk/index.html").toURI().toString();
+        Widget sigarDiskWidget = new Widget(sigarDisk, 220, 390);
     }
 }

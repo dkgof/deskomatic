@@ -6,10 +6,6 @@
 package dk.lystrup.deskomatic.jsinterop;
 
 import com.google.gson.JsonObject;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.security.AccessControlException;
-import org.hyperic.sigar.Cpu;
 
 /**
  *
@@ -17,10 +13,7 @@ import org.hyperic.sigar.Cpu;
  */
 public class JSBridge {
 
-    private SigarInfo sigar;
-    
     public JSBridge() {
-        sigar = new SigarInfo();
     }
 
     public String getRuntimeInfo() {
@@ -37,6 +30,6 @@ public class JSBridge {
     }
     
     public SigarInfo getSigar() {
-        return sigar;
+        return SigarInfo.instance();
     }
 }
