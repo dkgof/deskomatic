@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebView;
 import javax.swing.JFrame;
+import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
@@ -32,7 +33,7 @@ public class Widget {
 
     private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
-    private JFrame frame;
+    private JWindow window;
     private WebView browser;
     private JFXPanel jfxPanel;
 
@@ -52,20 +53,19 @@ public class Widget {
 
     private void createWidgetFrame() {
         SwingUtilities.invokeLater(() -> {
-            frame = new JFrame();
+            window = new JWindow();
             jfxPanel = new JFXPanel();
 
-            frame.setUndecorated(true);
-            frame.setSize(width, height);
+            window.setSize(width, height);
 
-            frame.setBackground(TRANSPARENT);
+            window.setBackground(TRANSPARENT);
             jfxPanel.setBackground(TRANSPARENT);
 
             setupDragging();
 
-            frame.getContentPane().add(jfxPanel);
+            window.getContentPane().add(jfxPanel);
 
-            frame.setVisible(true);
+            window.setVisible(true);
 
             System.out.println("Widget frame created...");
 
@@ -136,8 +136,8 @@ public class Widget {
                 public void mouseDragged(MouseEvent e) {
                     if (dragStart != null && e.isControlDown()) {
                         // get location of Window
-                        int thisX = frame.getLocation().x;
-                        int thisY = frame.getLocation().y;
+                        int thisX = window.getLocation().x;
+                        int thisY = window.getLocation().y;
 
                         // Determine how much the mouse moved since the initial click
                         int xMoved = (thisX + e.getX()) - (thisX + dragStart.x);
@@ -146,7 +146,7 @@ public class Widget {
                         // Move window to this position
                         int X = thisX + xMoved;
                         int Y = thisY + yMoved;
-                        frame.setLocation(X, Y);
+                        window.setLocation(X, Y);
 
                         e.consume();
                     }

@@ -10,15 +10,23 @@
 	
     <body class="noselect">
 		<div class="container">
-			<div class="title">DeskOMatic</div>
+			<div class="title">JVM Runtime</div>
 			<div class="info">
-				<div>Number of CPU's: <span id="numCpu">n/a</span></div>
-				<div>Free memory: <span id="freeMemory">n/a</span> MB</div>
-				<div>Total memory: <span id="totalMemory">n/a</span> MB</div>
-				<div>Used memory: <span id="usedMemory">n/a</span> MB</div>
-				<div>Max memory: <span id="maxMemory">n/a</span> MB</div>
-				<div>User time: <span id="userTime">n/a</span> Sec</div>
-				<div>CPU time: <span id="cpuTime">n/a</span> Sec</div>
+				<div class="row">
+					<div class="label">Number of CPU's:</div><div id="numCpu" class="value">n/a</div>
+				</div>
+				<div class="row">
+					<div class="label">Free memory:</div><div id="freeMemory" class="value">n/a</div>
+				</div>
+				<div class="row">
+					<div class="label">Total memory:</div><div id="totalMemory" class="value">n/a</div>
+				</div>
+				<div class="row">
+					<div class="label">Used memory:</div><div id="usedMemory" class="value">n/a</div>
+				</div>
+				<div class="row">
+					<div class="label">Max memory:</div><div id="maxMemory" class="value">n/a</div>
+				</div>
 			</div>
 		</div>
 		
@@ -33,19 +41,14 @@
 				var runtimeInfo = JSON.parse(deskomatic.getRuntimeInfo());
 				
 				jQuery("#numCpu").text(runtimeInfo.numProcessors);
-				jQuery("#totalMemory").text(toMB(runtimeInfo.totalMemory));
-				jQuery("#maxMemory").text(toMB(runtimeInfo.maxMemory));
-				jQuery("#freeMemory").text(toMB(runtimeInfo.freeMemory));
-				jQuery("#usedMemory").text(toMB(runtimeInfo.totalMemory - runtimeInfo.freeMemory));
-				
-				if(runtimeInfo.cpuTime) {
-					jQuery("#userTime").text(Math.round(runtimeInfo.userTime / 100000000) / 10);
-					jQuery("#cpuTime").text(Math.round(runtimeInfo.cpuTime / 100000000) / 10);
-				}
+				jQuery("#totalMemory").text(toMB(runtimeInfo.totalMemory)+"MB");
+				jQuery("#maxMemory").text(toMB(runtimeInfo.maxMemory)+"MB");
+				jQuery("#freeMemory").text(toMB(runtimeInfo.freeMemory)+"MB");
+				jQuery("#usedMemory").text(toMB(runtimeInfo.totalMemory - runtimeInfo.freeMemory)+"MB");
 			}
 			
 			function toMB(bytes) {
-				return Math.round(bytes / 1024.0 / 1024.0 * 10) / 10;
+				return (bytes / 1024.0 / 1024.0).toFixed(1);
 			}
 		</script>
 	</body>

@@ -20,7 +20,9 @@ public class Main {
         
         //JavaRuntime info
         String runtimeInfo = new File("./widgets/RuntimeInfo/index.html").toURI().toString();
+        Widget runtimeInfoWidget = new Widget(runtimeInfo, 220, 200);
 
-        Widget runtimeInfoWidget = new Widget(runtimeInfo, 256, 200);
+        String sigarCpu = new File("./widgets/SigarCpu/index.html").toURI().toString();
+        Widget sigarCpuWidget = new Widget(sigarCpu, 220, 300);
     }
 }

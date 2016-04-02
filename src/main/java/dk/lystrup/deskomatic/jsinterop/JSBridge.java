@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.security.AccessControlException;
+import org.hyperic.sigar.Cpu;
 
 /**
  *
@@ -16,17 +17,10 @@ import java.security.AccessControlException;
  */
 public class JSBridge {
 
+    private SigarInfo sigar;
+    
     public JSBridge() {
-        ThreadMXBean newBean = ManagementFactory.getThreadMXBean();
-        try {
-            if (newBean.isThreadCpuTimeSupported()) {
-                newBean.setThreadCpuTimeEnabled(true);
-            } else {
-                throw new AccessControlException("");
-            }
-        } catch (AccessControlException e) {
-            System.out.println("CPU Usage monitoring is not available!");
-        }
+        sigar = new SigarInfo();
     }
 
     public String getRuntimeInfo() {
@@ -39,21 +33,10 @@ public class JSBridge {
         json.addProperty("maxMemory", runtime.maxMemory());
         json.addProperty("totalMemory", runtime.totalMemory());
 
-        ThreadMXBean threadMX = ManagementFactory.getThreadMXBean();
-
-        if(threadMX.isThreadCpuTimeEnabled()) {
-            long userTime = 0;
-            long cpuTime = 0;
-
-            for (long id : threadMX.getAllThreadIds()) {
-                userTime += threadMX.getThreadUserTime(id);
-                cpuTime += threadMX.getThreadCpuTime(id);
-            }
-
-            json.addProperty("cpuTime", cpuTime);
-            json.addProperty("userTime", userTime);
-        }
-
         return json.toString();
+    }
+    
+    public SigarInfo getSigar() {
+        return sigar;
     }
 }
