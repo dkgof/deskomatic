@@ -5,7 +5,6 @@
  */
 package dk.lystrup.deskomatic.jsinterop;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
 import java.util.HashMap;
@@ -16,9 +15,9 @@ import kamon.sigar.SigarProvisioner;
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
+import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.NetInterfaceConfig;
 import org.hyperic.sigar.NetInterfaceStat;
-import org.hyperic.sigar.NetStat;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 
@@ -72,6 +71,23 @@ public class SigarInfo {
         return json.toString();
     }
 
+    public String getMemoryInfo() {
+        JsonObject json = new JsonObject();
+
+        try {
+            Mem mem = sigar.getMem();
+
+            json.add("memTotal", JSBridge.getJsonWithUnits(mem.getTotal() / 1024.0 / 1024.0 / 1024.0, "GiB", "Total", 3));
+            json.add("memFree", JSBridge.getJsonWithUnits(mem.getActualFree() / 1024.0 / 1024.0 / 1024.0, "GiB", "Free", 3));
+            json.add("memUsed", JSBridge.getJsonWithUnits(mem.getActualUsed() / 1024.0 / 1024.0 / 1024.0, "GiB", "Used", 3));
+
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return json.toString();
+    }
+
     private long lastDiskTimestamp = -1;
     private Map<String, Long> lastReadBytesMap = new HashMap<>();
     private Map<String, Long> lastWriteBytesMap = new HashMap<>();
@@ -88,9 +104,9 @@ public class SigarInfo {
                 FileSystemUsage fsInfo = sigar.getFileSystemUsage(fs.getDirName());
 
                 fsJson.add("usePercent", JSBridge.getJsonWithUnits(fsInfo.getUsePercent() * 100.0, "%", "Percent used", 1));
-                fsJson.add("free", JSBridge.getJsonWithUnits(fsInfo.getFree() / 1024.0 / 1024, "GB", "Free space", 1));
-                fsJson.add("used", JSBridge.getJsonWithUnits(fsInfo.getUsed() / 1024.0 / 1024, "GB", "Used space", 1));
-                fsJson.add("total", JSBridge.getJsonWithUnits(fsInfo.getTotal() / 1024.0 / 1024, "GB", "Total space", 1));
+                fsJson.add("free", JSBridge.getJsonWithUnits(fsInfo.getFree() / 1024.0 / 1024, "GiB", "Free space", 1));
+                fsJson.add("used", JSBridge.getJsonWithUnits(fsInfo.getUsed() / 1024.0 / 1024, "GiB", "Used space", 1));
+                fsJson.add("total", JSBridge.getJsonWithUnits(fsInfo.getTotal() / 1024.0 / 1024, "GiB", "Total space", 1));
 
                 long writeBytes = fsInfo.getDiskWriteBytes();
                 long readBytes = fsInfo.getDiskReadBytes();
@@ -104,8 +120,8 @@ public class SigarInfo {
                     double writeSpeed = (writeBytes - lastWriteBytes) / time;
                     double readSpeed = (readBytes - lastReadBytes) / time;
 
-                    fsJson.add("writeSpeed", JSBridge.getJsonWithUnits(writeSpeed / 1024, "KB/s", "Write speed", 1));
-                    fsJson.add("readSpeed", JSBridge.getJsonWithUnits(readSpeed / 1024, "KB/s", "Read speed", 1));
+                    fsJson.add("writeSpeed", JSBridge.getJsonWithUnits(writeSpeed / 1024, "KiB/s", "Write speed", 1));
+                    fsJson.add("readSpeed", JSBridge.getJsonWithUnits(readSpeed / 1024, "KiB/s", "Read speed", 1));
                 }
 
                 lastReadBytesMap.put(fs.getDirName(), readBytes);
@@ -150,8 +166,8 @@ public class SigarInfo {
                 double rxSpeed = (rx - lastRx) / time / 1024.0 / 1024.0;
                 double txSpeed = (tx - lastTx) / time / 1024.0 / 1024.0;
 
-                json.add("rxSpeed", JSBridge.getJsonWithUnits(rxSpeed, "MB/s", "Incomming", 2));
-                json.add("txSpeed", JSBridge.getJsonWithUnits(txSpeed, "MB/s", "Outgoing", 2));
+                json.add("rxSpeed", JSBridge.getJsonWithUnits(rxSpeed, "MiB/s", "Incomming", 2));
+                json.add("txSpeed", JSBridge.getJsonWithUnits(txSpeed, "MiB/s", "Outgoing", 2));
             }
 
             lastRx = rx;

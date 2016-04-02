@@ -11,7 +11,7 @@
     <body class="noselect">
         <div class="container">
             <div class="title">Sigar Disk</div>
-            <div class="disks"></div>
+            <div class="data"></div>
         </div>
 
         <script>
@@ -26,7 +26,7 @@
 
                 var diskJson = JSON.parse(sigar.getDiskInfo());
 
-                jQuery(".disks").empty();
+                jQuery(".data").empty();
 
                 jQuery.each(diskJson, function (key, fsJson) {
                     var info = jQuery("<div class=\"info\"></div>");
@@ -52,7 +52,7 @@
                         info.append(row);
                     });
 
-                    jQuery(".disks").append(info);
+                    jQuery(".data").append(info);
                 });
             }
         </script>

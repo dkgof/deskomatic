@@ -11,7 +11,7 @@
     <body class="noselect">
         <div class="container">
             <div class="title">Sigar Net</div>
-            <div class="net"></div>
+            <div class="data"></div>
         </div>
 
         <script>
@@ -26,7 +26,7 @@
 
                 var json = JSON.parse(sigar.getNetworkInfo());
 
-                jQuery(".net").empty();
+                jQuery(".data").empty();
 
                 var info = jQuery("<div class=\"info\"></div>");
                 jQuery.each(json, function (key, entry) {
@@ -49,7 +49,7 @@
 
                     info.append(row);
                 });
-                jQuery(".net").append(info);
+                jQuery(".data").append(info);
             }
         </script>
     </body>

@@ -10,7 +10,7 @@
 
     <body class="noselect">
         <div class="container">
-            <div class="title">Sigar CPU</div>
+            <div class="title">Sigar Memory</div>
             <div class="data"></div>
         </div>
 
@@ -24,7 +24,7 @@
             function update() {
                 var sigar = deskomatic.getSigar();
 
-                var json = JSON.parse(sigar.getCpuInfo());
+                var json = JSON.parse(sigar.getMemoryInfo());
 
                 jQuery(".data").empty();
 

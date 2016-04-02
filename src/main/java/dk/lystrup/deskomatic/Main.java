@@ -30,5 +30,8 @@ public class Main {
 
         String sigarNet = new File("./widgets/SigarNet/index.html").toURI().toString();
         Widget sigarNetWidget = new Widget(sigarNet, 440, 300);
+
+        String sigarMem = new File("./widgets/SigarMem/index.html").toURI().toString();
+        Widget sigarMemWidget = new Widget(sigarMem, 220, 300);
     }
 }
