@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.lystrup.deskomatic;
+package dk.lystrup.deskomatic.widget;
 
 import com.sun.javafx.webkit.Accessor;
+import dk.lystrup.deskomatic.jsinterop.JSBridge;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -20,6 +21,7 @@ import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebView;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
 
 /**
@@ -82,6 +84,10 @@ public class Widget {
             //Setup listeners for events
             browser.getEngine().documentProperty().addListener((ObservableValue<? extends Document> ov, Document oldDocument, Document newDocument) -> {
                 System.out.println("Document loaded...");
+                
+                JSObject jsWindow = (JSObject) browser.getEngine().executeScript("window");
+                jsWindow.setMember("deskomatic", new JSBridge());
+                browser.getEngine().executeScript("jsBridgeReady()");
             });
             
             browser.getEngine().getLoadWorker().stateProperty().addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
