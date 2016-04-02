@@ -48,13 +48,13 @@
 				
 				var cpuJson = JSON.parse(sigar.getCpuInfo());
 				
-				jQuery("#cpuIdle").text(shorten(cpuJson.cpuIdle)+"%");
-				jQuery("#cpuUser").text(shorten(cpuJson.cpuUser)+"%");
-				jQuery("#cpuSystem").text(shorten(cpuJson.cpuSystem)+"%");
-				jQuery("#cpuWait").text(shorten(cpuJson.cpuWait)+"%");
-				jQuery("#cpuIrq").text(shorten(cpuJson.cpuIrq)+"%");
-				jQuery("#cpuCombined").text(shorten(cpuJson.cpuCombined)+"%");
-				jQuery("#cpuNice").text(shorten(cpuJson.cpuNice)+"%");
+				jQuery("#cpuIdle").text(shorten(cpuJson.cpuIdle));
+				jQuery("#cpuUser").text(shorten(cpuJson.cpuUser));
+				jQuery("#cpuSystem").text(shorten(cpuJson.cpuSystem));
+				jQuery("#cpuWait").text(shorten(cpuJson.cpuWait));
+				jQuery("#cpuIrq").text(shorten(cpuJson.cpuIrq));
+				jQuery("#cpuCombined").text(shorten(cpuJson.cpuCombined));
+				jQuery("#cpuNice").text(shorten(cpuJson.cpuNice));
 			}
 			
 			function shorten(number) {
