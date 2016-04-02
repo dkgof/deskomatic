@@ -43,18 +43,13 @@
                     row.append(valueUnit);
 
                     valueUnit.append(jQuery("<div class=\"value\">" + value + "</div>"));
-                    if(entry.unit) {
+                    if (entry.unit) {
                         valueUnit.append(jQuery("<div class=\"unit\">&nbsp;" + entry.unit + "</div>"));
                     }
 
                     info.append(row);
                 });
                 jQuery(".cpu").append(info);
-            }
-
-            function shorten(number) {
-                return number.toFixed(2);
-                ;
             }
         </script>
     </body>
