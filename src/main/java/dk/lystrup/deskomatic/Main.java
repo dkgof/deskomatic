@@ -26,6 +26,6 @@ public class Main {
         Widget sigarCpuWidget = new Widget(sigarCpu, 220, 300);
 
         String sigarDisk = new File("./widgets/SigarDisk/index.html").toURI().toString();
-        Widget sigarDiskWidget = new Widget(sigarDisk, 220, 390);
+        Widget sigarDiskWidget = new Widget(sigarDisk, 220, 550);
     }
 }

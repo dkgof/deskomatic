@@ -8,6 +8,8 @@ package dk.lystrup.deskomatic.jsinterop;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import kamon.sigar.SigarProvisioner;
@@ -65,6 +67,10 @@ public class SigarInfo {
         
         return json.toString();
     }
+
+    private long lastTimestamp = -1;
+    private Map<String, Long> lastReadBytesMap = new HashMap<>();
+    private Map<String, Long> lastWriteBytesMap = new HashMap<>();
     
     public String getDiskInfo() {
         JsonObject json = new JsonObject();
@@ -77,10 +83,29 @@ public class SigarInfo {
                 
                 FileSystemUsage fsInfo = sigar.getFileSystemUsage(fs.getDirName());
                 
-                fsJson.addProperty("usePercent", fsInfo.getUsePercent());
-                fsJson.addProperty("free", fsInfo.getFree());
-                fsJson.addProperty("used", fsInfo.getUsed());
-                fsJson.addProperty("total", fsInfo.getTotal());
+                fsJson.add("usePercent", getJsonWithUnits(fsInfo.getUsePercent() * 100.0, "%", "Percent used", 1));
+                fsJson.add("free", getJsonWithUnits(fsInfo.getFree() / 1024.0 / 1024, "GB", "Free space", 1));
+                fsJson.add("used", getJsonWithUnits(fsInfo.getUsed()/ 1024.0 / 1024, "GB", "Used space", 1));
+                fsJson.add("total", getJsonWithUnits(fsInfo.getTotal()/ 1024.0 / 1024, "GB", "Total space", 1));
+                
+                long writeBytes = fsInfo.getDiskWriteBytes();
+                long readBytes = fsInfo.getDiskReadBytes();
+
+                if(lastTimestamp != -1) {
+                
+                    long lastReadBytes = lastReadBytesMap.get(fs.getDirName());
+                    long lastWriteBytes = lastWriteBytesMap.get(fs.getDirName());
+                
+                    double time = (System.currentTimeMillis() - lastTimestamp) / 1000.0;
+                    double writeSpeed = (writeBytes - lastWriteBytes) / time;
+                    double readSpeed = (readBytes - lastReadBytes) / time;
+                    
+                    fsJson.add("writeSpeed", getJsonWithUnits(writeSpeed / 1024, "KB/s", "Write speed", 1));
+                    fsJson.add("readSpeed", getJsonWithUnits(readSpeed / 1024, "KB/s", "Read speed", 1));
+                }
+                
+                lastReadBytesMap.put(fs.getDirName(), readBytes);
+                lastWriteBytesMap.put(fs.getDirName(), writeBytes);
                 
                 json.add(fs.getDevName(), fsJson);
             }
@@ -88,6 +113,36 @@ public class SigarInfo {
             Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        lastTimestamp = System.currentTimeMillis();
+        
         return json.toString();
+    }
+    
+    public String getNetworkInfo() {
+        JsonObject json = new JsonObject();
+
+
+        
+        return json.toString();
+    }
+    
+    public JsonObject getJsonWithUnits(Object value, String unit, String description, int fixedDecimals) {
+        JsonObject json = new JsonObject();
+        
+        if(value instanceof Number) {
+            json.addProperty("value", (Number) value);
+        } else if(value instanceof Boolean) {
+            json.addProperty("value", (Boolean) value);
+        } else if(value instanceof String) {
+            json.addProperty("value", (String) value);
+        } else if(value instanceof Character) {
+            json.addProperty("value", (Character) value);
+        }
+        
+        json.addProperty("unit", unit);
+        json.addProperty("description", description);
+        json.addProperty("fixedDecimals", fixedDecimals);
+        
+        return json;
     }
 }
