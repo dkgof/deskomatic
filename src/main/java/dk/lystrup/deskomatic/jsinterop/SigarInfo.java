@@ -53,13 +53,13 @@ public class SigarInfo {
         try {
             CpuPerc cpu = sigar.getCpuPerc();
             
-            json.addProperty("cpuIdle", cpu.getIdle());
-            json.addProperty("cpuCombined", cpu.getCombined());
-            json.addProperty("cpuWait", cpu.getWait());
-            json.addProperty("cpuSystem", cpu.getSys());
-            json.addProperty("cpuUser", cpu.getUser());
-            json.addProperty("cpuIrq", cpu.getIrq());
-            json.addProperty("cpuNice", cpu.getNice());
+            json.add("cpuIdle", getJsonWithUnits(cpu.getIdle(), null, "Cpu idle", 2));
+            json.add("cpuUser", getJsonWithUnits(cpu.getUser(), null, "Cpu user", 2));
+            json.add("cpuSystem", getJsonWithUnits(cpu.getSys(), null, "Cpu system", 2));
+            json.add("cpuWait", getJsonWithUnits(cpu.getWait(), null, "Cpu wait", 2));
+            json.add("cpuIrq", getJsonWithUnits(cpu.getIrq(), null, "Cpu irq", 2));
+            json.add("cpuNice", getJsonWithUnits(cpu.getNice(), null, "Cpu nice", 2));
+            json.add("cpuCombined", getJsonWithUnits(cpu.getCombined(), null, "Cpu combined", 2));
             
         } catch (SigarException ex) {
             Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);

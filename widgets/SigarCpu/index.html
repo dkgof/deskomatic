@@ -2,64 +2,60 @@
 <html debug="false">
     <head>
         <link href="./main.css" rel="stylesheet" type="text/css"/>
-		
-		<!--<script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>-->
-		
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+
+        <!-- <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script> -->
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
     </head>
-	
+
     <body class="noselect">
-		<div class="container">
-			<div class="title">Sigar CPU</div>
-			<div class="info">
-				<div class="row">
-					<div class="label">Cpu idle:</div><div id="cpuIdle" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu user:</div><div id="cpuUser" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu system:</div><div id="cpuSystem" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu wait:</div><div id="cpuWait" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu irq:</div><div id="cpuIrq" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu nice:</div><div id="cpuNice" class="value">n/a</div>
-				</div>
-				<div class="row">
-					<div class="label">Cpu combined:</div><div id="cpuCombined" class="value">n/a</div>
-				</div>
-			</div>
-		</div>
-		
-		<script>
-			function jsBridgeReady() {
-				window.setInterval(function() {
-					update();
-				}, 1000);
-			}
-			
-			function update() {
-				var sigar = deskomatic.getSigar();
-				
-				var cpuJson = JSON.parse(sigar.getCpuInfo());
-				
-				jQuery("#cpuIdle").text(shorten(cpuJson.cpuIdle));
-				jQuery("#cpuUser").text(shorten(cpuJson.cpuUser));
-				jQuery("#cpuSystem").text(shorten(cpuJson.cpuSystem));
-				jQuery("#cpuWait").text(shorten(cpuJson.cpuWait));
-				jQuery("#cpuIrq").text(shorten(cpuJson.cpuIrq));
-				jQuery("#cpuCombined").text(shorten(cpuJson.cpuCombined));
-				jQuery("#cpuNice").text(shorten(cpuJson.cpuNice));
-			}
-			
-			function shorten(number) {
-				return number.toFixed(2);;
-			}
-		</script>
-	</body>
+        <div class="container">
+            <div class="title">Sigar CPU</div>
+            <div class="cpu"></div>
+        </div>
+
+        <script>
+            function jsBridgeReady() {
+                window.setInterval(function () {
+                    update();
+                }, 1000);
+            }
+
+            function update() {
+                var sigar = deskomatic.getSigar();
+
+                var json = JSON.parse(sigar.getCpuInfo());
+
+                jQuery(".cpu").empty();
+
+                var info = jQuery("<div class=\"info\"></div>");
+                jQuery.each(json, function (key, entry) {
+                    var row = jQuery("<div class=\"row\"></div>");
+                    row.append(jQuery("<div class=\"label\">" + entry.description + "</div>"));
+
+                    var value = entry.value;
+                    if (entry.fixedDecimals >= 0) {
+                        value = value.toFixed(entry.fixedDecimals);
+                    }
+
+                    var valueUnit = jQuery("<div class=\"valueUnit\"></div>");
+
+                    row.append(valueUnit);
+
+                    valueUnit.append(jQuery("<div class=\"value\">" + value + "</div>"));
+                    if(entry.unit) {
+                        valueUnit.append(jQuery("<div class=\"unit\">&nbsp;" + entry.unit + "</div>"));
+                    }
+
+                    info.append(row);
+                });
+                jQuery(".cpu").append(info);
+            }
+
+            function shorten(number) {
+                return number.toFixed(2);
+                ;
+            }
+        </script>
+    </body>
 </html>
