@@ -20,18 +20,18 @@ public class Main {
         
         //JavaRuntime info
         String runtimeInfo = new File("./widgets/RuntimeInfo/index.html").toURI().toString();
-        Widget runtimeInfoWidget = new Widget(runtimeInfo, 220, 200);
+        Widget runtimeInfoWidget = new Widget(runtimeInfo, 215, 180);
 
         String sigarCpu = new File("./widgets/SigarCpu/index.html").toURI().toString();
-        Widget sigarCpuWidget = new Widget(sigarCpu, 220, 300);
+        Widget sigarCpuWidget = new Widget(sigarCpu, 215, 215);
 
         String sigarDisk = new File("./widgets/SigarDisk/index.html").toURI().toString();
-        Widget sigarDiskWidget = new Widget(sigarDisk, 220, 550);
+        Widget sigarDiskWidget = new Widget(sigarDisk, 215, 500);
 
         String sigarNet = new File("./widgets/SigarNet/index.html").toURI().toString();
-        Widget sigarNetWidget = new Widget(sigarNet, 440, 300);
+        Widget sigarNetWidget = new Widget(sigarNet, 430, 195);
 
         String sigarMem = new File("./widgets/SigarMem/index.html").toURI().toString();
-        Widget sigarMemWidget = new Widget(sigarMem, 220, 300);
+        Widget sigarMemWidget = new Widget(sigarMem, 215, 145);
     }
 }
