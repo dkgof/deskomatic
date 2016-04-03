@@ -101,33 +101,38 @@ public class SigarInfo {
             for (FileSystem fs : fsList) {
                 JsonObject fsJson = new JsonObject();
 
-                FileSystemUsage fsInfo = sigar.getFileSystemUsage(fs.getDirName());
+                try {
+                
+                    FileSystemUsage fsInfo = sigar.getFileSystemUsage(fs.getDirName());
 
-                fsJson.add("usePercent", JSBridge.getJsonWithUnits(fsInfo.getUsePercent() * 100.0, "%", "Percent used", 1));
-                fsJson.add("free", JSBridge.getJsonWithUnits(fsInfo.getFree() / 1024.0 / 1024, "GiB", "Free space", 1));
-                fsJson.add("used", JSBridge.getJsonWithUnits(fsInfo.getUsed() / 1024.0 / 1024, "GiB", "Used space", 1));
-                fsJson.add("total", JSBridge.getJsonWithUnits(fsInfo.getTotal() / 1024.0 / 1024, "GiB", "Total space", 1));
+                    fsJson.add("usePercent", JSBridge.getJsonWithUnits(fsInfo.getUsePercent() * 100.0, "%", "Percent used", 1));
+                    fsJson.add("free", JSBridge.getJsonWithUnits(fsInfo.getFree() / 1024.0 / 1024, "GiB", "Free space", 1));
+                    fsJson.add("used", JSBridge.getJsonWithUnits(fsInfo.getUsed() / 1024.0 / 1024, "GiB", "Used space", 1));
+                    fsJson.add("total", JSBridge.getJsonWithUnits(fsInfo.getTotal() / 1024.0 / 1024, "GiB", "Total space", 1));
 
-                long writeBytes = fsInfo.getDiskWriteBytes();
-                long readBytes = fsInfo.getDiskReadBytes();
+                    long writeBytes = fsInfo.getDiskWriteBytes();
+                    long readBytes = fsInfo.getDiskReadBytes();
 
-                if (lastDiskTimestamp != -1) {
+                    if (lastDiskTimestamp != -1) {
 
-                    long lastReadBytes = lastReadBytesMap.get(fs.getDirName());
-                    long lastWriteBytes = lastWriteBytesMap.get(fs.getDirName());
+                        long lastReadBytes = lastReadBytesMap.get(fs.getDirName());
+                        long lastWriteBytes = lastWriteBytesMap.get(fs.getDirName());
 
-                    double time = (System.currentTimeMillis() - lastDiskTimestamp) / 1000.0;
-                    double writeSpeed = (writeBytes - lastWriteBytes) / time;
-                    double readSpeed = (readBytes - lastReadBytes) / time;
+                        double time = (System.currentTimeMillis() - lastDiskTimestamp) / 1000.0;
+                        double writeSpeed = (writeBytes - lastWriteBytes) / time;
+                        double readSpeed = (readBytes - lastReadBytes) / time;
 
-                    fsJson.add("writeSpeed", JSBridge.getJsonWithUnits(writeSpeed / 1024, "KiB/s", "Write speed", 1));
-                    fsJson.add("readSpeed", JSBridge.getJsonWithUnits(readSpeed / 1024, "KiB/s", "Read speed", 1));
+                        fsJson.add("writeSpeed", JSBridge.getJsonWithUnits(writeSpeed / 1024, "KiB/s", "Write speed", 1));
+                        fsJson.add("readSpeed", JSBridge.getJsonWithUnits(readSpeed / 1024, "KiB/s", "Read speed", 1));
+                    }
+
+                    lastReadBytesMap.put(fs.getDirName(), readBytes);
+                    lastWriteBytesMap.put(fs.getDirName(), writeBytes);
+
+                    json.add(fs.getDevName(), fsJson);
+                } catch(Exception e) {
+                    System.out.println("Unable to read disk: "+fs.getDirName());
                 }
-
-                lastReadBytesMap.put(fs.getDirName(), readBytes);
-                lastWriteBytesMap.put(fs.getDirName(), writeBytes);
-
-                json.add(fs.getDevName(), fsJson);
             }
         } catch (SigarException ex) {
             Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
