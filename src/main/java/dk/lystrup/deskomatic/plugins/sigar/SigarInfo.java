@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dk.lystrup.deskomatic.jsinterop;
+package dk.lystrup.deskomatic.plugins.sigar;
 
 import com.google.gson.JsonObject;
+import dk.lystrup.deskomatic.jsinterop.JSBridge;
+import dk.lystrup.deskomatic.plugins.AbstractPlugin;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +27,7 @@ import org.hyperic.sigar.SigarException;
  *
  * @author Gof
  */
-public class SigarInfo {
+public class SigarInfo extends AbstractPlugin {
 
     private static SigarInfo instance;
 
@@ -40,6 +42,8 @@ public class SigarInfo {
     private Sigar sigar;
 
     private SigarInfo() {
+        addAllowedEvent("test");
+        
         final File location = new File("./sigar-native");
         try {
             SigarProvisioner.provision(location);

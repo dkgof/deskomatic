@@ -5,6 +5,7 @@
  */
 package dk.lystrup.deskomatic.jsinterop;
 
+import dk.lystrup.deskomatic.plugins.sigar.SigarInfo;
 import com.google.gson.JsonObject;
 
 /**
