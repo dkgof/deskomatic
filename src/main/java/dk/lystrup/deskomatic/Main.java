@@ -7,6 +7,7 @@ package dk.lystrup.deskomatic;
 
 import dk.lystrup.deskomatic.widget.Widget;
 import dk.lystrup.deskomatic.cookies.Cookies;
+import dk.lystrup.deskomatic.widget.Browser;
 import java.io.File;
 
 /**
@@ -33,5 +34,10 @@ public class Main {
 
         String sigarMem = new File("./widgets/SigarMem/index.html").toURI().toString();
         Widget sigarMemWidget = new Widget(sigarMem, 285, 180);
+        
+        String google = "http://google.com/";
+        Browser googleWidget = new Browser(google, 1024, 768);
+
+        
     }
 }
