@@ -5,25 +5,17 @@
  */
 package dk.lystrup.deskomatic.widget;
 
-import com.sun.javafx.webkit.Accessor;
-import dk.lystrup.deskomatic.jsinterop.JSBridge;
+import com.mohamnag.fxwebview_debugger.DevToolsDebuggerServer;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebView;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,8 +24,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JWindow;
 import javax.swing.SwingUtilities;
-import netscape.javascript.JSObject;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -146,6 +136,13 @@ public class Browser {
             jfxPanel.setScene(new Scene(browser, javafx.scene.paint.Color.TRANSPARENT));
 
             browser.getEngine().load(widgetUrl);
+            
+            try {
+                System.out.println("Starting debugger for: "+widgetUrl);
+                new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
+            } catch (Exception ex) {
+                Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             System.out.println("Browser module added...");
         });

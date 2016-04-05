@@ -37,7 +37,5 @@ public class Main {
         
         String google = "http://google.com/";
         Browser googleWidget = new Browser(google, 1024, 768);
-
-        
     }
 }

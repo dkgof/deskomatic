@@ -5,6 +5,7 @@
  */
 package dk.lystrup.deskomatic.widget;
 
+import com.mohamnag.fxwebview_debugger.DevToolsDebuggerServer;
 import com.sun.javafx.webkit.Accessor;
 import dk.lystrup.deskomatic.jsinterop.JSBridge;
 import java.awt.Color;
@@ -14,6 +15,8 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
@@ -123,6 +126,13 @@ public class Widget {
             });
 
             browser.getEngine().load(widgetUrl);
+            
+            try {
+                System.out.println("Starting debugger for: "+widgetUrl);
+                new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
+            } catch (Exception ex) {
+                Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             //Make background page transparent
             Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
