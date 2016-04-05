@@ -54,6 +54,7 @@ public class Widget {
 
     private Point dragStart;
     private Point resizeLast;
+    private DevToolsDebuggerServer debugger;
 
     public Widget(String url, int width, int height) {
         this.widgetUrl = url;
@@ -91,8 +92,6 @@ public class Widget {
             windowInfo.getContentPane().add(resolutionLabel);
             windowInfo.getContentPane().add(positionLabel);
             
-            System.out.println("Widget frame created...");
-
             createBrowser();
         });
     }
@@ -107,8 +106,6 @@ public class Widget {
 
             //Setup listeners for events
             browser.getEngine().documentProperty().addListener((ObservableValue<? extends Document> ov, Document oldDocument, Document newDocument) -> {
-                System.out.println("Document loaded...");
-                
                 JSObject jsWindow = (JSObject) browser.getEngine().executeScript("window");
                 jsWindow.setMember("deskomatic", new JSBridge());
                 browser.getEngine().executeScript("jsBridgeReady()");
@@ -116,7 +113,6 @@ public class Widget {
             
             browser.getEngine().getLoadWorker().stateProperty().addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
                 if(newState == State.SUCCEEDED) {
-                    System.out.println("Load page complete...");
                 }
             });
 
@@ -129,19 +125,22 @@ public class Widget {
             
             try {
                 System.out.println("Starting debugger for: "+widgetUrl);
-                new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
+                debugger = new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
             } catch (Exception ex) {
                 Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             //Make background page transparent
             Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
-
-            System.out.println("Browser module added...");
         });
     }
 
     private void destroy() {
+        try {
+            debugger.stopDebugServer();
+        } catch (Exception ex) {
+            Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
+        }
         window.setVisible(false);
         window.dispose();
         browser = null;
