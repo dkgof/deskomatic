@@ -15,11 +15,10 @@ body {
 
     display: -webkit-flex;
     -webkit-flex-direction: column;
-    
+
     -webkit-box-shadow: 1px 10px 26px -4px rgba(0,0,0,0.4);
-    -moz-box-shadow: 1px 10px 26px -4px rgba(0,0,0,0.4);
     box-shadow: 1px 10px 26px -4px rgba(0,0,0,0.4);    
-    
+
     text-shadow: 1px 1px 6px rgba(0,0,0,0.8);
 }
 .container:hover {
@@ -35,11 +34,9 @@ body {
     top: 0px;
     left: 0px;    
 
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ebf1f6+0,eaeaea+20,263235+27,d5ebfb+100&0.2+0,0.68+24,0.23+100 */
-background: -moz-linear-gradient(top,  rgba(0,0,0,0.7) 0%, rgba(234,234,234,0.4) 24%, rgba(122,129,131,0.68) 24%, rgba(38,50,53,0.66) 27%, rgba(213,235,251,0.0) 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  rgba(0,0,0,0.7) 0%,rgba(234,234,234,0.4) 24%,rgba(122,129,131,0.68) 24%,rgba(38,50,53,0.66) 27%,rgba(213,235,251,0.0) 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  rgba(0,0,0,0.7) 0%,rgba(234,234,234,0.4) 24%,rgba(122,129,131,0.68) 24%,rgba(38,50,53,0.66) 27%,rgba(213,235,251,0.0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#33ebf1f6', endColorstr='#3bd5ebfb',GradientType=0 ); /* IE6-9 */
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ebf1f6+0,eaeaea+20,263235+27,d5ebfb+100&0.2+0,0.68+24,0.23+100 */
+    background: -webkit-linear-gradient(top,  rgba(0,0,0,0.7) 0%,rgba(234,234,234,0.4) 24%,rgba(122,129,131,0.68) 24%,rgba(38,50,53,0.66) 27%,rgba(213,235,251,0.0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  rgba(0,0,0,0.7) 0%,rgba(234,234,234,0.4) 24%,rgba(122,129,131,0.68) 24%,rgba(38,50,53,0.66) 27%,rgba(213,235,251,0.0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 
     opacity:0.5;
     z-index: -1;   
@@ -61,9 +58,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#33ebf1f6', e
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* IE/Edge */
     user-select: none;           /* non-prefixed version, currently
                                     not supported by any browser */
 }

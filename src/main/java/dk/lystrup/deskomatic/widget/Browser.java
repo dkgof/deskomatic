@@ -5,7 +5,6 @@
  */
 package dk.lystrup.deskomatic.widget;
 
-import com.mohamnag.fxwebview_debugger.DevToolsDebuggerServer;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -136,13 +135,6 @@ public class Browser {
             jfxPanel.setScene(new Scene(browser, javafx.scene.paint.Color.TRANSPARENT));
 
             browser.getEngine().load(widgetUrl);
-            
-            try {
-                System.out.println("Starting debugger for: "+widgetUrl);
-                new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
-            } catch (Exception ex) {
-                Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
-            }
             
             System.out.println("Browser module added...");
         });

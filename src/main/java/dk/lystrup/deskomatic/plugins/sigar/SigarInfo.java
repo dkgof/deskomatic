@@ -71,7 +71,7 @@ public class SigarInfo extends AbstractPlugin {
         } catch (SigarException ex) {
             Logger.getLogger(SigarInfo.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         return json.toString();
     }
 
@@ -187,7 +187,7 @@ public class SigarInfo extends AbstractPlugin {
         }
 
         lastNetTimestamp = System.currentTimeMillis();
-
+        
         return json.toString();
     }
 }

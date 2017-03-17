@@ -5,7 +5,6 @@
  */
 package dk.lystrup.deskomatic.widget;
 
-import com.mohamnag.fxwebview_debugger.DevToolsDebuggerServer;
 import com.sun.javafx.webkit.Accessor;
 import dk.lystrup.deskomatic.jsinterop.JSBridge;
 import java.awt.Color;
@@ -15,8 +14,9 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
@@ -35,7 +35,7 @@ import org.w3c.dom.Document;
  * @author Gof
  */
 public class Widget {
-
+    
     private static final Color TRANSPARENT = new Color(0, 0, 0, 0);
     private static final Color DRAG_COLOR = new Color(0, 0, 0, 128);
     private static final Color WINDOW_INFO_COLOR = new Color(255, 255, 255, 95);
@@ -54,7 +54,8 @@ public class Widget {
 
     private Point dragStart;
     private Point resizeLast;
-    private DevToolsDebuggerServer debugger;
+    
+    private JSBridge bridge;
 
     public Widget(String url, int width, int height) {
         this.widgetUrl = url;
@@ -107,7 +108,8 @@ public class Widget {
             //Setup listeners for events
             browser.getEngine().documentProperty().addListener((ObservableValue<? extends Document> ov, Document oldDocument, Document newDocument) -> {
                 JSObject jsWindow = (JSObject) browser.getEngine().executeScript("window");
-                jsWindow.setMember("deskomatic", new JSBridge());
+                bridge = new JSBridge();
+                jsWindow.setMember("deskomatic", bridge);
                 browser.getEngine().executeScript("jsBridgeReady()");
             });
             
@@ -123,24 +125,12 @@ public class Widget {
 
             browser.getEngine().load(widgetUrl);
             
-            try {
-                System.out.println("Starting debugger for: "+widgetUrl);
-                debugger = new DevToolsDebuggerServer(browser.getEngine().impl_getDebugger());
-            } catch (Exception ex) {
-                Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
             //Make background page transparent
             Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
         });
     }
 
     private void destroy() {
-        try {
-            debugger.stopDebugServer();
-        } catch (Exception ex) {
-            Logger.getLogger(Widget.class.getName()).log(Level.SEVERE, null, ex);
-        }
         window.setVisible(false);
         window.dispose();
         browser = null;
