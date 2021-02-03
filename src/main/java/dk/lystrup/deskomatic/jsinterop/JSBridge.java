@@ -5,7 +5,6 @@
  */
 package dk.lystrup.deskomatic.jsinterop;
 
-import dk.lystrup.deskomatic.plugins.sigar.SigarInfo;
 import com.google.gson.JsonObject;
 
 /**
@@ -32,10 +31,6 @@ public class JSBridge {
         json.add("usedMemory", JSBridge.getJsonWithUnits(totalMemory - freeMemory, "MB", "Used memory", 1));
 
         return json.toString();
-    }
-
-    public SigarInfo getSigar() {
-        return SigarInfo.instance();
     }
 
     public static JsonObject getJsonWithUnits(Object value, String unit, String description, int fixedDecimals) {

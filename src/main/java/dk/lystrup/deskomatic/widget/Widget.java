@@ -14,14 +14,12 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebView;
 import javax.swing.JLabel;
@@ -115,6 +113,10 @@ public class Widget {
             
             browser.getEngine().getLoadWorker().stateProperty().addListener((ObservableValue<? extends State> ov, State oldState, State newState) -> {
                 if(newState == State.SUCCEEDED) {
+                    //Make background page transparent
+                    Platform.runLater(() -> {
+                        Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
+                    });
                 }
             });
 
@@ -125,8 +127,8 @@ public class Widget {
 
             browser.getEngine().load(widgetUrl);
             
-            //Make background page transparent
-            Accessor.getPageFor(browser.getEngine()).setBackgroundColor(0);
+            //browser.setBlendMode(BlendMode.DARKEN);
+            
         });
     }
 

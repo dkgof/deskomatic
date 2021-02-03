@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html debug="true">
+<html>
     <head>
-        <link href="../Common/css/main.css" rel="stylesheet" type="text/css"/>
-
-        <!-- <script type='text/javascript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script> -->
-
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script>
+            fetch("../Common/css/main.css").then((response)=>{
+                response.text().then((css)=>{
+                    let style = document.createElement("style");
+                    style.innerHTML = css;
+                    document.head.append(style);
+                });
+            });
+        </script>
     </head>
 
     <body class="noselect">
@@ -16,7 +21,7 @@
 
         <script>
             function jsBridgeReady() {
-                window.setInterval(function() {
+                window.setInterval(function () {
                     update();
                 }, 1000);
             }
