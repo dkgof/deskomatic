@@ -6,20 +6,25 @@
 package dk.lystrup.deskomatic.widget;
 
 import com.sun.javafx.webkit.Accessor;
+import dk.cavi.xml.XMLLoader;
+import dk.cavi.xml.XMLNode;
+import dk.cavi.xml.XMLSaver;
 import dk.lystrup.deskomatic.jsinterop.JSBridge;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebView;
 import javax.swing.JLabel;
@@ -47,8 +52,10 @@ public class Widget {
     private JLabel positionLabel;
     
     private final String widgetUrl;
-    private final int width;
-    private final int height;
+    private int x;
+    private int y;
+    private int width;
+    private int height;
 
     private Point dragStart;
     private Point resizeLast;
@@ -60,16 +67,61 @@ public class Widget {
         this.width = width;
         this.height = height;
 
+        this.x = 0;
+        this.y = 0;
+        
+        loadBounds();
+        
         createWidgetFrame();
     }
+    
+    private String getConfigName() {
+        Pattern configNamePattern = Pattern.compile("/widgets/(.+?)/index.html");
+        Matcher matcher = configNamePattern.matcher(widgetUrl);
+        if(matcher.find()) {
+            return matcher.group(1)+".xml";
+        }
+        
+        return null;
+    }
 
+    private void loadBounds() {
+        try {
+            XMLLoader loader = new XMLLoader(getConfigName());
+            XMLNode xml = loader.getRootNode();
+            
+            this.width = xml.loadVariable("width", this.width);
+            this.height = xml.loadVariable("height", this.height);
+            this.x = xml.loadVariable("x", this.x);
+            this.y = xml.loadVariable("y", this.y);
+        } catch(Exception e) {
+            System.out.println(""+e);
+        }
+    }
+    
+    private void saveBounds() {
+        Rectangle bounds = window.getBounds();
+        
+        XMLSaver xml = new XMLSaver();
+        xml.appendln("<settings>");
+        xml.appendVariable(bounds.width, "width");
+        xml.appendVariable(bounds.height, "height");
+        xml.appendVariable(bounds.x, "x");
+        xml.appendVariable(bounds.y, "y");
+        xml.appendln("</settings>");
+        
+        xml.writeFile(getConfigName());
+    }
+    
     private void createWidgetFrame() {
         SwingUtilities.invokeLater(() -> {
             window = new JWindow();
             jfxPanel = new JFXPanel();
 
-            window.setSize(width, height);
+            window.setBounds(x, y, width, height);
 
+            saveBounds();
+            
             window.setBackground(TRANSPARENT);
             jfxPanel.setBackground(TRANSPARENT);
 
@@ -192,6 +244,8 @@ public class Widget {
                         
                         dragStart = null;
                         resizeLast = null;
+                        
+                        saveBounds();
                     }
                 }
             });

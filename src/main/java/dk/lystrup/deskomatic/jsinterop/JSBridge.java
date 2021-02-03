@@ -6,6 +6,8 @@
 package dk.lystrup.deskomatic.jsinterop;
 
 import com.google.gson.JsonObject;
+import java.util.Arrays;
+import oshi.SystemInfo;
 
 /**
  *
@@ -13,9 +15,18 @@ import com.google.gson.JsonObject;
  */
 public class JSBridge {
 
+    private final SystemInfo systemInfo;
+    private long[][] logicalTicks;
+    
     public JSBridge() {
+        systemInfo = new SystemInfo();
+        logicalTicks = systemInfo.getHardware().getProcessor().getProcessorCpuLoadTicks();
     }
 
+    public void log(String msg) {
+        System.out.println("[JSBridge]: "+msg);
+    }
+    
     public String getRuntimeInfo() {
         JsonObject json = new JsonObject();
 
@@ -33,6 +44,25 @@ public class JSBridge {
         return json.toString();
     }
 
+    public String getCpuInfo() {
+        JsonObject json = new JsonObject();
+        
+        json.add("cpuName", JSBridge.getJsonWithUnits(systemInfo.getHardware().getProcessor().getProcessorIdentifier().getName(), null, "CPU", 0));
+        json.add("physical", JSBridge.getJsonWithUnits(systemInfo.getHardware().getProcessor().getPhysicalProcessorCount(), null, "Cores", 0));
+        json.add("logical", JSBridge.getJsonWithUnits(systemInfo.getHardware().getProcessor().getLogicalProcessorCount(), null, "Threads", 0));
+        json.add("freq", JSBridge.getJsonWithUnits(systemInfo.getHardware().getProcessor().getMaxFreq() / 1000000000.0, "Ghz", "Frequency", 2));
+        
+        int count = 0;
+        for(double load : systemInfo.getHardware().getProcessor().getProcessorCpuLoadBetweenTicks(logicalTicks)) {
+            json.add("load"+count, JSBridge.getJsonWithUnits(load * 100.0, "%", "Thread"+count+" usage", 1));
+            count++;
+        }
+        
+        logicalTicks = systemInfo.getHardware().getProcessor().getProcessorCpuLoadTicks();
+        
+        return json.toString();
+    }
+    
     public static JsonObject getJsonWithUnits(Object value, String unit, String description, int fixedDecimals) {
         JsonObject json = new JsonObject();
 

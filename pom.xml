@@ -18,6 +18,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>15.0.1</version>
@@ -73,7 +78,12 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.30</version>
         </dependency>
-            
+        <dependency>
+            <groupId>dk.cavi</groupId>
+            <artifactId>XMLSaver</artifactId>
+            <version>2.5.2</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>

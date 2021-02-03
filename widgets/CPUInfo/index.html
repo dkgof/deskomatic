@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script>
+            fetch("../Common/css/main.css").then((response)=>{
+                response.text().then((css)=>{
+                    let style = document.createElement("style");
+                    style.innerHTML = css;
+                    document.head.append(style);
+                });
+            });
+        </script>
+    </head>
+
+    <body class="noselect">
+        <div class="container">
+            <div class="title">CPU</div>
+            <div class="runtime"></div>
+        </div>
+
+        <script>
+            function jsBridgeReady() {
+                const runtime = jQuery(".runtime");
+
+                window.setInterval(()=>{
+                    const json = JSON.parse(deskomatic.getCpuInfo());
+
+                    runtime.empty();
+
+                    const info = jQuery("<div class=\"info\"></div>");
+                    jQuery.each(json, function (key, entry) {
+                        try {
+                            const row = jQuery("<div class=\"row\"></div>");
+                            row.append(jQuery("<div class=\"label\">" + entry.description + "</div>"));
+
+                            let value = entry.value;
+                            if (entry.fixedDecimals >= 0 && value.toFixed != null) {
+                                value = value.toFixed(entry.fixedDecimals);
+                            }
+
+                            let valueUnit = jQuery("<div class=\"valueUnit\"></div>");
+
+                            row.append(valueUnit);
+
+                            valueUnit.append(jQuery("<div class=\"value\">" + value + "</div>"));
+                            if (entry.unit) {
+                                valueUnit.append(jQuery("<div class=\"unit\">&nbsp;" + entry.unit + "</div>"));
+                            }
+
+                            info.append(row);
+                        } catch(e) {
+                            deskomatic.log("Error: "+e);
+                        }
+                    });
+                    runtime.append(info);
+                }, 1000);
+            }
+
+        </script>
+    </body>
+</html>

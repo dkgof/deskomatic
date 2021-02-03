@@ -9,6 +9,7 @@ import dk.lystrup.deskomatic.widget.Widget;
 import dk.lystrup.deskomatic.cookies.Cookies;
 import dk.lystrup.deskomatic.widget.Browser;
 import java.io.File;
+import oshi.SystemInfo;
 
 /**
  *
@@ -21,6 +22,9 @@ public class Main {
         
         String runtimeInfo = new File("./widgets/RuntimeInfo/index.html").toURI().toString();
         Widget runtimeInfoWidget = new Widget(runtimeInfo, 285, 210);
+
+        String cpuInfo = new File("./widgets/CPUInfo/index.html").toURI().toString();
+        Widget cpuInfoWidget = new Widget(cpuInfo, 285, 210);
 
         String google = "http://google.com/";
         //Browser googleWidget = new Browser(google, 1024, 768);
